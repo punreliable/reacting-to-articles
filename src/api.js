@@ -5,6 +5,13 @@ export async function fetchPosts(pageNum = 1) {
   return response.json();
 }
 
+export async function fetchComicPosts(pageNum = 1) {
+  const response = await fetch(
+    `http://news.comicui.com/wp-json/wp/v2/pages/${pageNum}`
+  );
+  return response.json();
+}
+
 export async function fetchComments(postId) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`

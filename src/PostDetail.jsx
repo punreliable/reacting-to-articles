@@ -3,13 +3,19 @@ import { useQuery } from '@tanstack/react-query';
 import "./PostDetail.css";
 
 export function PostDetail({ post }) {
-  // replace with useQuery
+
   const {data, isLoading, isError, error} = useQuery({
     queryKey: ["comments"],
-    queryFn: fetchComments(post.id),
+    queryFn: () => fetchComments(post.id),
   });
 
-if( isLoading ) {return(<div><h1>...is Loading</h1></div>)}
+if( isLoading ) {
+  return(
+  <div>
+    <h1>...is Loading</h1>
+  </div>
+  )
+}
 
 if( isError ) {
   return(
@@ -19,6 +25,7 @@ if( isError ) {
     </div>
   ) 
 }
+
   return (
     <>
       <h3 style={{ color: "blue" }}>{post.title}</h3>

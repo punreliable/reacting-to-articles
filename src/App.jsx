@@ -8,11 +8,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-    <div className="App">
-      <h1>Blog &apos;em Ipsum</h1>
-      <Posts />
-    </div>
-    <ReactQueryDevtools />
+      <div className="App">
+        <h1>Blog &apos;em Ipsum</h1>
+        <Posts />
+      </div>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

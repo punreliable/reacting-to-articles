@@ -1,21 +1,38 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchPosts, deletePost, updatePost } from "./api";
 import { PostDetail } from "./PostDetail";
-import { QueryClient, QueryClientProvider } from "react-query";
+
 const maxPostPage = 10;
 
 export function Posts() {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [selectedComments, setSelectedComments] = useState(null);
 
-  const {data, isError, error, isLoading} = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (postId) => deletePost(postId),
+  });
+  const updateMutation = useMutation({
+    mutationFn: (postId) => updatePost(postId),
   });
 
-  if(!data){ return(<div><h1>Loading...</h1></div>)}
+  useEffect(() => {
+    if(currentPage < maxPostPage) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ["posts", nextPage], 
+        queryFn: fetchPosts(nextPage),
+      });
+    }
+  }, [currentPage, queryClient]);
+
+  const {data, isError, error, isLoading} = useQuery({
+    queryKey: ["posts", currentPage],
+    queryFn: fetchPosts(currentPage),
+    staleTime: 2000,
+  });
   if(isLoading){ return(<div><h1>Loading...</h1></div>)}
   if(isError) { 
     return(
